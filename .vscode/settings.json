@@ -1,0 +1,5 @@
+{
+    "chat.disableAIFeatures": true,
+    "chat.mcp.apps.enabled": false,
+    "python.analysis.autoImportCompletions": false
+}
