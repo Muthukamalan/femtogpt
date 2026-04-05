@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QwenSmol</title>
+
+  <!-- Fonts: JetBrains Mono (display) + Geist (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Geist:wght@300..700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────────── */
+    :root, [data-theme="light"] {
+      --color-bg:             #f7f6f2;
+      --color-surface:        #f9f8f5;
+      --color-surface-2:      #fbfbf9;
+      --color-surface-offset: #f3f0ec;
+      --color-border:         #d4d1ca;
+      --color-divider:        #dcd9d5;
+      --color-text:           #28251d;
+      --color-text-muted:     #7a7974;
+      --color-text-faint:     #bab9b4;
+      --color-primary:        #01696f;
+      --color-primary-hover:  #0c4e54;
+      --color-primary-active: #0f3638;
+      --color-primary-highlight: #cedcd8;
+      --color-error:          #a12c7b;
+      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+      --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-full: 9999px;
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --space-1:  0.25rem;
+      --space-2:  0.5rem;
+      --space-3:  0.75rem;
+      --space-4:  1rem;
+      --space-5:  1.25rem;
+      --space-6:  1.5rem;
+      --space-8:  2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --font-display: 'JetBrains Mono', 'Courier New', monospace;
+      --font-body:    'Geist', 'Inter', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:             #171614;
+      --color-surface:        #1c1b19;
+      --color-surface-2:      #201f1d;
+      --color-surface-offset: #1d1c1a;
+      --color-border:         #393836;
+      --color-divider:        #262523;
+      --color-text:           #cdccca;
+      --color-text-muted:     #797876;
+      --color-text-faint:     #5a5957;
+      --color-primary:        #4f98a3;
+      --color-primary-hover:  #227f8b;
+      --color-primary-active: #1a626b;
+      --color-primary-highlight: #313b3b;
+      --color-error:          #d163a7;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.2);
+      --shadow-md: 0 4px 12px oklch(0 0 0 / 0.3);
+      --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.4);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --color-bg:             #171614;
+        --color-surface:        #1c1b19;
+        --color-surface-2:      #201f1d;
+        --color-surface-offset: #1d1c1a;
+        --color-border:         #393836;
+        --color-divider:        #262523;
+        --color-text:           #cdccca;
+        --color-text-muted:     #797876;
+        --color-text-faint:     #5a5957;
+        --color-primary:        #4f98a3;
+        --color-primary-hover:  #227f8b;
+        --color-primary-active: #1a626b;
+        --color-primary-highlight: #313b3b;
+        --color-error:          #d163a7;
+        --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.2);
+        --shadow-md: 0 4px 12px oklch(0 0 0 / 0.3);
+        --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.4);
+      }
+    }
+
+    /* ─── Base Reset ────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--space-16);
+    }
+    body {
+      min-height: 100dvh;
+      line-height: 1.6;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background-color: var(--color-bg);
+      display: flex;
+      flex-direction: column;
+    }
+    img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+    input, button, textarea, select { font: inherit; color: inherit; }
+    h1, h2, h3, h4, h5, h6 { text-wrap: balance; line-height: 1.15; }
+    p, li { text-wrap: pretty; max-width: 72ch; }
+
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    ::selection {
+      background: color-mix(in oklab, var(--color-primary) 25%, transparent);
+      color: var(--color-text);
+    }
+
+    a, button, [role="button"], input, textarea, select {
+      transition: color var(--transition-interactive),
+                  background var(--transition-interactive),
+                  border-color var(--transition-interactive),
+                  box-shadow var(--transition-interactive);
+    }
+    button { cursor: pointer; background: none; border: none; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ─── Header ────────────────────────────────────────────────────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-4) var(--space-8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: var(--color-text);
+    }
+
+    .logo-icon { color: var(--color-primary); flex-shrink: 0; }
+
+    .logo-wordmark {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+    }
+    .logo-wordmark span { color: var(--color-primary); }
+
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      background: transparent;
+      border: 1px solid var(--color-border);
+    }
+    .theme-toggle:hover {
+      color: var(--color-text);
+      background: var(--color-surface-offset);
+      border-color: var(--color-divider);
+    }
+
+    /* ─── Main Layout ───────────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-12) var(--space-6);
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    /* ─── Input Card ────────────────────────────────────────────────── */
+    .input-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .input-label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    .textarea-wrapper { position: relative; }
+
+    .chat-textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      line-height: 1.6;
+      transition: border-color var(--transition-interactive),
+                  box-shadow var(--transition-interactive);
+    }
+    .chat-textarea::placeholder { color: var(--color-text-faint); }
+    .chat-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 15%, transparent);
+    }
+
+    /* ─── Parameters Grid ───────────────────────────────────────────── */
+    .params-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .params-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      width: fit-content;
+    }
+    .params-toggle:hover { color: var(--color-primary); }
+    .params-toggle svg {
+      transition: transform var(--transition-interactive);
+    }
+    .params-toggle[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .params-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3) var(--space-4);
+    }
+
+    .param-field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .param-field.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .param-label {
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .param-value-display {
+      font-family: var(--font-display);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      min-width: 2.5rem;
+      text-align: right;
+    }
+
+    .param-input {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      width: 100%;
+      transition: border-color var(--transition-interactive),
+                  box-shadow var(--transition-interactive);
+    }
+    .param-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 15%, transparent);
+    }
+
+    /* Range slider */
+    .param-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      accent-color: var(--color-primary);
+    }
+    .param-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    .param-range::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      border: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .toggle-label {
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--color-text-muted);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      transition: background var(--transition-interactive);
+      cursor: pointer;
+    }
+    .toggle-thumb {
+      position: absolute;
+      left: 3px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+      transition: left var(--transition-interactive);
+      pointer-events: none;
+    }
+    .toggle-switch input:checked ~ .toggle-track { background: var(--color-primary); }
+    .toggle-switch input:checked ~ .toggle-thumb { left: 19px; }
+    .toggle-switch input:focus-visible ~ .toggle-track {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    /* Collapsible params */
+    .params-body {
+      overflow: hidden;
+      transition: max-height 300ms cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 200ms ease;
+    }
+    .params-body[data-collapsed="true"] {
+      max-height: 0 !important;
+      opacity: 0;
+    }
+    .params-body[data-collapsed="false"] {
+      opacity: 1;
+    }
+
+    /* ─── Input Footer ──────────────────────────────────────────────── */
+    .input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .char-hint {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-sm);
+      border: none;
+      letter-spacing: 0.01em;
+    }
+    .submit-btn:hover { background: var(--color-primary-hover); box-shadow: var(--shadow-md); }
+    .submit-btn:active { background: var(--color-primary-active); }
+    .submit-btn[disabled], .submit-btn.loading {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .submit-btn .spinner {
+      display: none;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+    .submit-btn.loading .spinner { display: block; }
+    .submit-btn.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Response Panel ────────────────────────────────────────────── */
+    .response-panel {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .skeleton-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+      display: none;
+    }
+    .skeleton-card.visible { display: block; }
+
+    .skeleton-line {
+      height: 0.875rem;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(
+        90deg,
+        var(--color-surface-offset) 0%,
+        var(--color-divider) 50%,
+        var(--color-surface-offset) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease infinite;
+      margin-bottom: var(--space-3);
+    }
+    .skeleton-line:nth-child(2) { width: 80%; }
+    .skeleton-line:nth-child(3) { width: 60%; }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    #response-area { animation: fadeSlideIn 220ms ease both; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .response-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .response-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding: var(--space-4) var(--space-6);
+      background: var(--color-surface-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .response-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+    .response-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+
+    .response-meta {
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      font-family: var(--font-display);
+    }
+
+    .response-card-body { padding: var(--space-6); }
+
+    .response-text {
+      font-size: var(--text-base);
+      color: var(--color-text);
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: none;
+    }
+    .response-text p { margin-bottom: var(--space-3); }
+    .response-text p:last-child { margin-bottom: 0; }
+
+    .error-text { color: var(--color-error); font-size: var(--text-sm); }
+
+    /* ─── Empty state ───────────────────────────────────────────────── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+      color: var(--color-text-faint);
+    }
+    .empty-icon { color: var(--color-primary-highlight); }
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+    .empty-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-faint);
+      max-width: 36ch;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: var(--space-6) var(--space-8);
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+      border-top: 1px solid var(--color-divider);
+    }
+
+    /* ─── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .site-header { padding: var(--space-3) var(--space-4); }
+      .main { padding: var(--space-8) var(--space-4); }
+      .input-footer { flex-direction: column; align-items: flex-end; }
+      .params-grid { grid-template-columns: 1fr; }
+      .param-field.full-width { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <a href="/" class="logo" aria-label="QwenSmol home">
+      <svg class="logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="24" height="18" rx="4" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M8 8h12M8 13h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M10 20l-3 5 7-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-wordmark">Smol<span>Chat</span></span>
+    </a>
+
+    <button
+      class="theme-toggle"
+      data-theme-toggle
+      aria-label="Switch to light mode"
+      title="Toggle theme"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ── Main ── -->
+  <main class="main">
+    <div class="chat-container">
+
+      <!-- Input Card -->
+      <section class="input-card" aria-label="Chat input">
+        <label class="input-label" for="user-prompt">Your message</label>
+
+        <div class="textarea-wrapper">
+          <textarea
+            id="user-prompt"
+            class="chat-textarea"
+            placeholder="Ask me anything…"
+            rows="4"
+            autocomplete="off"
+            spellcheck="true"
+          ></textarea>
+        </div>
+
+        <!-- Parameters Section -->
+        <div class="params-section">
+          <button
+            class="params-toggle"
+            aria-expanded="false"
+            aria-controls="params-body"
+            id="params-toggle-btn"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+            Generation parameters
+          </button>
+
+          <div
+            class="params-body"
+            id="params-body"
+            data-collapsed="true"
+            style="max-height: 0;"
+          >
+            <div class="params-grid" style="padding-top: var(--space-3);">
+
+              <!-- max_tokens -->
+              <div class="param-field">
+                <label class="param-label" for="param-max-tokens">
+                  max_tokens
+                  <span class="param-value-display" id="max-tokens-display">100</span>
+                </label>
+                <input
+                  type="range"
+                  id="param-max-tokens"
+                  class="param-range"
+                  min="10"
+                  max="2048"
+                  step="10"
+                  value="100"
+                  aria-valuemin="10"
+                  aria-valuemax="2048"
+                  aria-valuenow="100"
+                />
+              </div>
+
+              <!-- temperature -->
+              <div class="param-field">
+                <label class="param-label" for="param-temperature">
+                  temperature
+                  <span class="param-value-display" id="temperature-display">0.8</span>
+                </label>
+                <input
+                  type="range"
+                  id="param-temperature"
+                  class="param-range"
+                  min="0"
+                  max="2"
+                  step="0.05"
+                  value="0.8"
+                />
+              </div>
+
+              <!-- top_k -->
+              <div class="param-field">
+                <label class="param-label" for="param-top-k">
+                  top_k
+                  <span class="param-value-display" id="top-k-display">40</span>
+                </label>
+                <input
+                  type="range"
+                  id="param-top-k"
+                  class="param-range"
+                  min="1"
+                  max="200"
+                  step="1"
+                  value="40"
+                />
+              </div>
+
+              <!-- num_beams -->
+              <div class="param-field">
+                <label class="param-label" for="param-num-beams">
+                  num_beams
+                  <span class="param-value-display" id="num-beams-display">4</span>
+                </label>
+                <input
+                  type="range"
+                  id="param-num-beams"
+                  class="param-range"
+                  min="1"
+                  max="16"
+                  step="1"
+                  value="4"
+                />
+              </div>
+
+              <!-- do_sample -->
+              <div class="param-field">
+                <div class="toggle-row">
+                  <span class="toggle-label">do_sample</span>
+                  <label class="toggle-switch" aria-label="Enable do_sample">
+                    <input type="checkbox" id="param-do-sample" checked />
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- early_stopping -->
+              <div class="param-field">
+                <div class="toggle-row">
+                  <span class="toggle-label">early_stopping</span>
+                  <label class="toggle-switch" aria-label="Enable early_stopping">
+                    <input type="checkbox" id="param-early-stopping" checked />
+                    <span class="toggle-track"></span>
+                    <span class="toggle-thumb"></span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer row -->
+        <div class="input-footer">
+          <span class="char-hint">Press Send or Ctrl + Enter</span>
+          <button type="button" class="submit-btn" id="send-btn" aria-label="Send message">
+            <span class="btn-text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:5px" aria-hidden="true">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Send
+            </span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Skeleton loader -->
+      <div id="loading-indicator" class="skeleton-card" aria-live="polite" aria-label="Loading response">
+        <div class="skeleton-line" style="width:90%"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line"></div>
+      </div>
+
+      <!-- Response Panel -->
+      <section class="response-panel" aria-label="Response" aria-live="polite">
+        <div id="response-area">
+          <div class="empty-state" role="status">
+            <svg class="empty-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+              <rect x="6" y="6" width="36" height="26" rx="6" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 18h16M16 24h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M18 32l-5 9 11-9" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+            <p class="empty-title">No response yet</p>
+            <p class="empty-desc">Type a message above and press Send to get a reply from the model.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    QwenSmol · powered by muthu
+  </footer>
+
+  <script>
+    // ── Theme Toggle ─────────────────────────────────────────────────
+    (function () {
+      const toggle = document.querySelector('[data-theme-toggle]');
+      const root   = document.documentElement;
+      let theme    = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+
+      const ICONS = {
+        dark:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+        light: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`,
+      };
+
+      function applyTheme(t) {
+        root.setAttribute('data-theme', t);
+        if (toggle) {
+          toggle.innerHTML = ICONS[t];
+          toggle.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' mode');
+        }
+      }
+
+      applyTheme(theme);
+      toggle && toggle.addEventListener('click', () => {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        applyTheme(theme);
+      });
+    })();
+
+    // ── Params collapsible ────────────────────────────────────────────
+    (function () {
+      const btn  = document.getElementById('params-toggle-btn');
+      const body = document.getElementById('params-body');
+
+      function open() {
+        body.dataset.collapsed = 'false';
+        body.style.maxHeight = body.scrollHeight + 'px';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+
+      function close() {
+        body.dataset.collapsed = 'true';
+        body.style.maxHeight = '0';
+        btn.setAttribute('aria-expanded', 'false');
+      }
+
+      btn.addEventListener('click', () => {
+        btn.getAttribute('aria-expanded') === 'true' ? close() : open();
+      });
+    })();
+
+    // ── Range slider live value display ───────────────────────────────
+    (function () {
+      const sliders = [
+        { id: 'param-max-tokens',   display: 'max-tokens-display',  decimals: 0 },
+        { id: 'param-temperature',  display: 'temperature-display', decimals: 2 },
+        { id: 'param-top-k',        display: 'top-k-display',       decimals: 0 },
+        { id: 'param-num-beams',    display: 'num-beams-display',   decimals: 0 },
+      ];
+
+      sliders.forEach(({ id, display, decimals }) => {
+        const input = document.getElementById(id);
+        const disp  = document.getElementById(display);
+        if (!input || !disp) return;
+        input.addEventListener('input', () => {
+          disp.textContent = parseFloat(input.value).toFixed(decimals);
+        });
+      });
+    })();
+
+    // ── Ctrl+Enter to submit ──────────────────────────────────────────
+    document.getElementById('user-prompt').addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('send-btn').click();
+      }
+    });
+
+    // ── Main send logic (JSON fetch) ──────────────────────────────────
+    document.getElementById('send-btn').addEventListener('click', async function () {
+      const prompt = document.getElementById('user-prompt').value.trim();
+      if (!prompt) {
+        document.getElementById('user-prompt').focus();
+        return;
+      }
+
+      const payload = {
+        prompt:        prompt,
+        max_tokens:    parseInt(document.getElementById('param-max-tokens').value, 10),
+        temperature:   parseFloat(document.getElementById('param-temperature').value),
+        top_k:         parseInt(document.getElementById('param-top-k').value, 10),
+        num_beams:     parseInt(document.getElementById('param-num-beams').value, 10),
+        do_sample:     document.getElementById('param-do-sample').checked,
+        early_stopping: document.getElementById('param-early-stopping').checked,
+      };
+
+      // UI: loading state
+      const btn       = document.getElementById('send-btn');
+      const loader    = document.getElementById('loading-indicator');
+      const respArea  = document.getElementById('response-area');
+
+      btn.classList.add('loading');
+      loader.classList.add('visible');
+      respArea.innerHTML = '';
+
+      try {
+        const res = await fetch('http://localhost:8000/text/generate', {
+          method:  'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept':       'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        let text;
+        const contentType = res.headers.get('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+          const json = await res.json();
+          // Support common response shapes: { generated_text }, { text }, { response }, or raw string
+          text = json.output_text ?? json.text ?? json.response ?? JSON.stringify(json, null, 2);
+        } else {
+          text = await res.text();
+        }
+
+        const isError = !res.ok;
+        const metaStr = `tokens: ${payload.max_tokens} · temp: ${payload.temperature} · top_k: ${payload.top_k}`;
+
+        respArea.innerHTML = `
+          <div class="response-card">
+            <div class="response-card-header">
+              <span class="response-badge ${isError ? 'style="color:var(--color-error)"' : ''}">
+                <span class="response-badge-dot" ${isError ? 'style="background:var(--color-error)"' : ''}></span>
+                ${isError ? 'Error' : 'SmolLM'}
+              </span>
+              <span class="response-meta">${isError ? '' : metaStr}</span>
+            </div>
+            <div class="response-card-body">
+              <p class="${isError ? 'error-text' : 'response-text'}">${escapeHtml(text)}</p>
+            </div>
+          </div>`;
+
+      } catch (err) {
+        respArea.innerHTML = `
+          <div class="response-card">
+            <div class="response-card-header">
+              <span class="response-badge" style="color:var(--color-error)">
+                <span class="response-badge-dot" style="background:var(--color-error)"></span>
+                Error
+              </span>
+            </div>
+            <div class="response-card-body">
+              <p class="error-text">Could not reach the backend. Make sure the server is running on port 8000.<br><small>${escapeHtml(err.message)}</small></p>
+            </div>
+          </div>`;
+      } finally {
+        btn.classList.remove('loading');
+        loader.classList.remove('visible');
+      }
+    });
+
+    // ── Utility ───────────────────────────────────────────────────────
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+services:
+  smollm-frontend:
+    build:
+      context: ./app/frontend/
+    ports:
+      - "8000:80"
+    networks:
+      - app-network
+
+  smollm-backend:
+    env_file:
+      - ./app/backend/.env
+    build:
+      context: ./app/backend
+    ports:
+      - "8001:8001"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
