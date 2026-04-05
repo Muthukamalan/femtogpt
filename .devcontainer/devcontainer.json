@@ -1,0 +1,28 @@
+{
+  "name": "py3Pgrms",
+  // "image": "pytorch/pytorch:2.10.0-cuda12.8-cudnn9-runtime",
+  "image":"ghcr.io/astral-sh/uv:debian-slim",
+  "runArgs": [
+    "--add-host=host.docker.internal:host-gateway",
+    "--gpus=all",
+    "--rm"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [],
+      "settings": {}
+    }
+  },
+  // "features": {
+  //   // "ghcr.io/devcontainers/features/go:1": {},
+  //   // "ghcr.io/devcontainers/feature-starter/hello:1": {
+  //   //   "greeting": "Hello"
+  //   // },
+  //   "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+  //     "version": "latest",
+  //     "enableNonRootDocker": "true",
+  //     "moby": "false",
+  //     "dockerDashCompose": "true"
+  //   }
+  // }
+}
