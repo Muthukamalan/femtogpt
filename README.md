@@ -36,3 +36,12 @@ A tiny, super minimal Chat Model.
 tensorboard --logdir=trainer_output/runs/
 ```
 ![Logs](./assets/logs.png)
+
+
+```sh
+# add .env file under app/backend/
+# HF_TOKEN=
+docker compose up 
+```
+
+![UI](./assets/webui.png)
