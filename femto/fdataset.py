@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import IterableDataset
 from datasets import load_dataset, interleave_datasets
 
-
+# inspire from [infinite-ds](https://github.com/huggingface/transformers/blob/resnet_with_variants/examples/research_projects/codeparrot/scripts/codeparrot_training.py)
 class StreamingDataset(IterableDataset):
     def __init__(self, tokenizer, block_size=512,mode:str='train'):
         self.block_size = block_size

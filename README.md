@@ -1,7 +1,17 @@
 # FemtoGPT
-A tiny, super minimal Chat Model.
+A tiny, super-minimal chat model built from scratch — tokenizer → transformer → training (base-model) → Inference API .
 
-<!-- https://github.com/huggingface/transformers/blob/resnet_with_variants/examples/research_projects/codeparrot/scripts/codeparrot_training.py -->
+> Goal: Understand and implement every core component of an LLM pipeline in the simplest possible way.
+
+## Features
+- Custom **BPE tokenizer** (no external tokenizer dependency)
+- Minimal **Transformer architecture** (RMSNorm, RoPE, SwiGLU)
+- Lightweight **80M parameter model**
+- Hugging Face **Trainer-based training pipeline**
+- Simple **web chat UI**
+- Dockerized setup for easy deployment
+
+
 ## Roadmap
 
 1. Tokenization
@@ -30,6 +40,57 @@ A tiny, super minimal Chat Model.
     - [ ] QLORA
 5. Inference
     - [ ] FastAPI
+
+## Installation
+To install the dependencies simply run the following command:
+```sh
+pip install -r requirements.txt
+```
+Before you run any of the scripts make sure you are logged in and can push to the hub:
+```sh
+huggingface-cli login
+```
+
+
+## Dataset
+The source of the dataset is from the 🤗 Datasets Huggingface and it's streaming and get only text
+- HuggingFaceTB/smollm-corpus
+- databricks/databricks-dolly-15k
+- Abirate/english_quotes
+- b-mc2/sql-create-context
+- squad
+- tatsu-lab/alpaca
+
+## Tokenizers
+- HuggingFaceTB/SmolLM-135M
+- Fully custom [BPE](https://github.com/Muthukamalan/TamilTokenizers) implementation
+**Supports:**
+    - Special tokens
+    - Efficient encoding/decoding
+    - Regex pre-tokenization
+
+|Model        | Details                  |
+|-------------|--------------------------|
+|Architecture |	Decoder-only Transformer |
+|Parameters   |	~80M                     |
+|Positional   | Encoding	RoPE         |
+|Normalization|	RMSNorm                  |
+|Activation   |	SwiGLU                   |
+|Attention    |	Multi-head self-attention|
+|Attn Impl    | MHLA                     |
+|Optimizer    | AdamW                    |
+|Scheduler    | Cosine Scheduler with warmup|
+|Logs         | Tensorboard              |
+|Generation   | Beam search              |
+| fp16        | True                     |
+
+
+## trainer API
+```sh
+# using trainer API from huggingface
+python train.py
+```
+
 
 
 ```log
