@@ -120,16 +120,10 @@ class node_trainer_output,node_assets,node_notebooks,node_misc toneRose
     - [X] Attention
 3. Train 80M Model
     - [X] PreTrain
-    - [ ] MidTrain
-    - [ ] PostTrain
-4. Chat Interface
-    - [ ] SFT
-    - [ ] Alignment
-    - [ ] Eval
-    - [ ] LORA
-    - [ ] QLORA
 5. Inference
-    - [ ] FastAPI
+    - [X] FastAPI
+    - [X] gradio
+    - [X] docker[client,server]
 
 ## Installation
 To install the dependencies simply run the following command:
